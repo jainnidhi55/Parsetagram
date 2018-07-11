@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Parsetagram</string>
     <string name="title_activity_home">HomeActivity</string>
+    <string name="title_activity_item_ig">item_ig</string>
 </resources>

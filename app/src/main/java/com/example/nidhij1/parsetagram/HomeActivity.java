@@ -6,11 +6,13 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,8 +26,12 @@ import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
+
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -33,6 +39,7 @@ public class HomeActivity extends AppCompatActivity {
     private Button createButton;
     private Button refreshButton;
     public String TAG = "HOMEACT";
+    public Button logOutBut;
 
 
     private static final String imagePath = "/storage/emulated/0/DCIM/Camera/IMG_20180709_160522.jpg";
@@ -43,12 +50,44 @@ public class HomeActivity extends AppCompatActivity {
     File photoFile;
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
+    public File img;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        //toolbar
+        android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setElevation(
+                getResources().getDimensionPixelSize(R.dimen.action_bar_elevation)
+        );
+        BottomNavigationView bottomNavigationView = (BottomNavigationView)
+                findViewById(R.id.bottom_navigation);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.action_favorites:
+                                final Intent intent_but = new Intent (HomeActivity.this, FeedActivity.class);
+                                startActivity(intent_but);
+                                finish();
+
+
+                            case R.id.action_schedules:
+
+                            case R.id.action_music:
+
+                        }
+                        return true;
+                    }
+                });
+
 
         descriptionInput = findViewById(R.id.et_descrip);
         createButton = findViewById(R.id.but_create);
@@ -63,7 +102,8 @@ public class HomeActivity extends AppCompatActivity {
                 if (isStoragePermissionGranted()) {
                     final File file = new File(imagePath);
                     ParseFile parseFile = new ParseFile(file);
-                    createPost(description, parseFile, user);
+                    //createPost(description, parseFile, user);
+                    onLaunchCamera();
                 }
             }
         });
@@ -76,21 +116,38 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         loadTopPosts();
+
+        //logout
+        logOutBut = (Button) findViewById(R.id.logoutbut);
+        logOutBut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ParseUser.logOut();
+                final Intent intent = new Intent (HomeActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
     }
 
     private void createPost(String description, ParseFile imageFile, ParseUser user) {
         final Post newPost = new Post();
         newPost.setDescription(description);
+
+        //launch the camera
+ //       onLaunchCamera();
+
+
         newPost.setImage(imageFile);
         newPost.setUser(user);
-        final View v = new View(this);
+
 
         newPost.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 if (e == null) {
                     Log.d("HomeActivity", "create post success");
-                    onLaunchCamera(v);
                 } else {
                     e.printStackTrace();
                 }
@@ -115,42 +172,15 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    public void onLaunchCamera(View view) {
+    public void onLaunchCamera() {
         // create Intent to take a picture and return control to the calling application
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Create a File reference to access to future access
-//        photoFile = getPhotoFileUri(photoFileName);
-
-        // wrap File object into a content provider
-        // required for API >= 24
-        // See https://guides.codepath.com/android/Sharing-Content-with-Intents#sharing-files-with-api-24-or-higher
-//        Uri fileProvider = FileProvider.getUriForFile(HomeActivity.this, "com.codepath.fileprovider", photoFile);
-//        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
-
         // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
         // So as long as the result is not null, it's safe to use the intent.
         if (intent.resolveActivity(getPackageManager()) != null) {
             // Start the image capture intent to take photo
             startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
         }
-    }
-
-    // Returns the File for a photo stored on disk given the fileName
-    public File getPhotoFileUri(String fileName) {
-        // Get safe storage directory for photos
-        // Use `getExternalFilesDir` on Context to access package-specific directories.
-        // This way, we don't need to request external read/write runtime permissions.
-        File mediaStorageDir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), APP_TAG);
-
-        // Create the storage directory if it does not exist
-        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
-            Log.d(APP_TAG, "failed to create directory");
-        }
-
-        // Return the file target for the photo based on filename
-        File file = new File(mediaStorageDir.getPath() + File.separator + fileName);
-
-        return file;
     }
 
     @Override
@@ -162,9 +192,37 @@ public class HomeActivity extends AppCompatActivity {
                 Bitmap takenImage = (Bitmap) extras.get("data");
                 //Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 // RESIZE BITMAP, see section below
-                // Load the taken image into a preview
-                ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
-                ivPreview.setImageBitmap(takenImage);
+
+
+                //converting bitmap to file attempt 1
+                /*File file = new File(imagePath);
+                try {
+                    OutputStream os = new BufferedOutputStream(new FileOutputStream(file));
+                    takenImage.compress(Bitmap.CompressFormat.JPEG, 100, os);
+                    os.close();
+                } catch (Exception e) {}*/
+
+
+                //converting bitmap to file attempt 2
+                //saveBitmap(takenImage, "/");
+
+                //attempt 3
+                ParseFile parseFile = conversionBitmapParseFile(takenImage);
+
+                //creating new post
+                final ParseUser user = ParseUser.getCurrentUser();
+                if (isStoragePermissionGranted()) {
+                    //ParseFile parseFile = new ParseFile(file);
+                    final String description = descriptionInput.getText().toString();
+                    createPost(description, parseFile, user);
+                    // Load the taken image into a preview
+                    ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
+                    ivPreview.setImageBitmap(takenImage);
+                }
+                EditText descrip = (EditText) findViewById(R.id.et_descrip);
+                descrip.setText("");
+
+
             } else { // Result was a failure
                 Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
@@ -188,6 +246,43 @@ public class HomeActivity extends AppCompatActivity {
             Log.v(TAG,"Permission is granted");
             return true;
         }
+    }
+
+    private File saveBitmap(Bitmap bitmap, String path) {
+        File file = null;
+        if (bitmap != null) {
+            file = new File(path);
+            try {
+                FileOutputStream outputStream = null;
+                try {
+                    outputStream = new FileOutputStream(path); //here is set your file path where you want to save or also here you can set file object directly
+
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream); // bitmap is your Bitmap instance, if you want to compress it you can compress reduce percentage
+                    // PNG is a lossless format, the compression factor (100) is ignored
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if (outputStream != null) {
+                            outputStream.close();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return file;
+    }
+
+    public ParseFile conversionBitmapParseFile(Bitmap imageBitmap){
+        ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
+        imageBitmap.compress(Bitmap.CompressFormat.PNG,100,byteArrayOutputStream);
+        byte[] imageByte = byteArrayOutputStream.toByteArray();
+        ParseFile parseFile = new ParseFile("image_file.png",imageByte);
+        return parseFile;
     }
 
 

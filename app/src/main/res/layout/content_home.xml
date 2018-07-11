@@ -12,7 +12,8 @@
         android:id="@+id/et_descrip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_above="@+id/but_create"
+        android:layout_centerHorizontal="true"
         android:ems="10"
         android:hint="Enter a description here "
         android:inputType="textPersonName" />
@@ -23,6 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/but_refresh2"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
         android:text="CREATE" />
 
     <Button
@@ -32,4 +34,5 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:text="REFRESH" />
+
 </RelativeLayout>
