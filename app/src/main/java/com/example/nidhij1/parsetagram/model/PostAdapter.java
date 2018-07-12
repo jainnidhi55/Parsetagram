@@ -49,6 +49,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
         Glide.with(context).load(post.getImage().getUrl())
                 .into(holder.pic);
         holder.date.setText(post.getCreatedAt().toString());
+        holder.usernam.setText(post.getUser().getUsername().toString());
     }
 
     @Override
@@ -70,12 +71,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
         public ImageView pic;
         public TextView descrip;
         public TextView date;
+        public TextView usernam;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             pic = itemView.findViewById(R.id.iv_IGpic);
             descrip = itemView.findViewById(R.id.tv_IGdescrip);
             date = itemView.findViewById(R.id.iv_dateDetails);
+            usernam = itemView.findViewById(R.id.tv_userName);
             itemView.setOnClickListener(this);
         }
 
