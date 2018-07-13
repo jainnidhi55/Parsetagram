@@ -14,6 +14,8 @@
         android:layout_height="326dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="65dp"
+        android:background="@drawable/border"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -43,11 +45,13 @@
 
     <TextView
         android:id="@+id/tv_userName"
-        android:layout_width="331dp"
+        android:layout_width="305dp"
         android:layout_height="27dp"
-        android:layout_alignStart="@id/iv_IGpic"
-        android:layout_below="@id/tv_IGdescrip"
-        android:layout_marginBottom="103dp"
+        android:layout_above="@+id/iv_IGpic"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="-65dp"
+        android:paddingBottom="3dp"
+        android:paddingLeft="5dp"
         android:paddingTop="5dp"
         android:text="TextView"
         android:textColor="@android:color/background_dark" />
@@ -57,7 +61,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@android:color/darker_gray"
-        android:layout_below="@id/tv_userName"
+        android:layout_below="@id/tv_IGdescrip"
         android:layout_marginTop="7dp"/>
 
     <ImageView
@@ -85,6 +89,16 @@
         android:layout_below="@+id/iv_IGpic"
         android:layout_toEndOf="@+id/iv_comm"
         android:layout_marginTop="3dp"
-        android:paddingLeft="5dp"
         app:srcCompat="@drawable/direct" />
+
+    <ImageView
+        android:id="@+id/iv_profpic"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_above="@+id/iv_IGpic"
+        android:layout_alignStart="@+id/iv_IGpic"
+        android:layout_marginBottom="-65dp"
+        android:paddingBottom="5dp"
+        android:paddingRight="5dp"
+        app:srcCompat="@android:color/holo_blue_bright" />
 </RelativeLayout>

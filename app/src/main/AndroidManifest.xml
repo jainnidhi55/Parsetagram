@@ -40,7 +40,8 @@
             android:name=".item_ig"
             android:label="@string/title_activity_item_ig"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".PostDetails"></activity>
+        <activity android:name=".PostDetails" />
+        <activity android:name=".ProfileActivity"></activity>
     </application>
 
 </manifest>

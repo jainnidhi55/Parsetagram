@@ -78,8 +78,8 @@ public class FeedActivity extends AppCompatActivity {
                             case R.id.action_favorites:
 
                             case R.id.action_schedules:
-                                final Intent intent_but = new Intent (FeedActivity.this, HomeActivity.class);
-                                startActivity(intent_but);
+                                final Intent intent_but7 = new Intent (FeedActivity.this, HomeActivity.class);
+                                startActivity(intent_but7);
                                 finish();
 
                             case R.id.action_music:

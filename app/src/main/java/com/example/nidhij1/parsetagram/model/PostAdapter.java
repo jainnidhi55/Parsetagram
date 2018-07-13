@@ -1,5 +1,6 @@
 package com.example.nidhij1.parsetagram.model;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -11,8 +12,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.nidhij1.parsetagram.PostDetails;
 import com.example.nidhij1.parsetagram.R;
+import com.parse.ParseFile;
+import com.parse.ParseUser;
 
 import org.parceler.Parcels;
 
@@ -22,6 +26,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
 
     List <Post> mPosts;
     Context context;
+
 
 
     public PostAdapter(List<Post> posts) {
@@ -38,6 +43,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
         return viewHolder;
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Post post = mPosts.get(position);
@@ -46,10 +52,22 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
 
         //populate
         holder.descrip.setText(post.getDescription());
-        Glide.with(context).load(post.getImage().getUrl())
+        Glide.with(context)
+                .load(post.getImage().getUrl())
+                .apply(new RequestOptions().override(100, 100))
                 .into(holder.pic);
         holder.date.setText(post.getCreatedAt().toString());
         holder.usernam.setText(post.getUser().getUsername().toString());
+
+        //profile picture
+
+        if (post.getUser().get("profPic") !=null) {
+            ParseFile profile = (ParseFile) post.getUser().get("profPic");
+            Glide.with(context)
+                    .load(profile.getUrl())
+                    .apply(new RequestOptions().override(100, 100))
+                    .into(holder.prof);
+        }
     }
 
     @Override
@@ -72,6 +90,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
         public TextView descrip;
         public TextView date;
         public TextView usernam;
+        public ParseFile parseFile;
+        public ParseUser user;
+        public ImageView prof;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -79,6 +100,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
             descrip = itemView.findViewById(R.id.tv_IGdescrip);
             date = itemView.findViewById(R.id.iv_dateDetails);
             usernam = itemView.findViewById(R.id.tv_userName);
+            prof = itemView.findViewById(R.id.iv_profpic);
             itemView.setOnClickListener(this);
         }
 

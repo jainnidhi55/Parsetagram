@@ -45,6 +45,7 @@ public class HomeActivity extends AppCompatActivity {
     public Bitmap takenImage;
     public ParseFile parseFile;
     public ParseUser user;
+    public ImageView prof;
 
 
     private static final String imagePath = "/storage/emulated/0/DCIM/Camera/IMG_20180709_160522.jpg";
@@ -80,14 +81,17 @@ public class HomeActivity extends AppCompatActivity {
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.action_favorites:
-                                final Intent intent_but = new Intent (HomeActivity.this, FeedActivity.class);
-                                startActivity(intent_but);
+                                final Intent intent_but1 = new Intent (HomeActivity.this, FeedActivity.class);
+                                startActivity(intent_but1);
                                 finish();
 
 
                             case R.id.action_schedules:
 
                             case R.id.action_music:
+                                final Intent intent_but3 = new Intent (HomeActivity.this, ProfileActivity.class);
+                                startActivity(intent_but3);
+                                finish();
 
                         }
                         return true;
@@ -98,6 +102,7 @@ public class HomeActivity extends AppCompatActivity {
         descriptionInput = findViewById(R.id.et_descrip);
         createButton = findViewById(R.id.but_create);
         refreshButton = findViewById(R.id.but_refresh2);
+
 
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
