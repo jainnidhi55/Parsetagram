@@ -62,11 +62,11 @@ public class FeedActivity extends AppCompatActivity {
         loadTopPosts();
 
         //toolbar
-        //android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
-        getSupportActionBar().setElevation(
-                getResources().getDimensionPixelSize(R.dimen.action_bar_elevation)
-        );
+//        android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+//        getSupportActionBar().setElevation(
+//                getResources().getDimensionPixelSize(R.dimen.action_bar_elevation)
+//        );
         BottomNavigationView bottomNavigationView = (BottomNavigationView)
                 findViewById(R.id.bottom_navigation);
 

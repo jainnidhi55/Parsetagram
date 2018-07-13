@@ -12,20 +12,20 @@
         android:id="@+id/et_descrip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/but_create"
+        android:layout_above="@+id/grayLine"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="-7dp"
         android:ems="10"
         android:hint="Enter a description here "
         android:inputType="textPersonName" />
 
-    <Button
+    <ImageButton
         android:id="@+id/but_create"
-        android:layout_width="186dp"
-        android:layout_height="wrap_content"
+        android:layout_width="71dp"
+        android:layout_height="65dp"
         android:layout_above="@+id/but_refresh2"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
-        android:text="CREATE" />
+        app:srcCompat="@drawable/camera_shadow_fill" />
 
     <Button
         android:id="@+id/but_refresh2"
@@ -35,13 +35,34 @@
         android:layout_centerHorizontal="true"
         android:text="REFRESH" />
 
-    <Button
+    <ImageButton
         android:id="@+id/but_choose"
+        android:layout_width="57dp"
+        android:layout_height="46dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/but_create"
+        android:layout_marginTop="8dp"
+        android:onClick="onPickPhoto"
+        android:text="choose"
+        app:srcCompat="@drawable/ufi_save_active" />
+
+    <View
+        android:id="@+id/grayLine"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_above="@id/but_choose"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="7dp"/>
+
+    <Button
+        android:id="@+id/but_post"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/et_descrip"
-        android:onClick="onPickPhoto"
-        android:text="choose" />
+        android:layout_above="@+id/but_refresh2"
+        android:layout_alignParentEnd="true"
+        android:onClick="onPost"
+        android:text="Post" />
+
 
 </RelativeLayout>

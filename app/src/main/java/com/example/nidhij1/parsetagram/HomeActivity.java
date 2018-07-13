@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -37,10 +38,13 @@ import java.util.List;
 public class HomeActivity extends AppCompatActivity {
 
     private EditText descriptionInput;
-    private Button createButton;
+    private ImageButton createButton;
     private Button refreshButton;
     public String TAG = "HOMEACT";
     public Button logOutBut;
+    public Bitmap takenImage;
+    public ParseFile parseFile;
+    public ParseUser user;
 
 
     private static final String imagePath = "/storage/emulated/0/DCIM/Camera/IMG_20180709_160522.jpg";
@@ -191,7 +195,7 @@ public class HomeActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 Bundle extras = data.getExtras();
                 // by this point we have the camera photo on disk
-                Bitmap takenImage = (Bitmap) extras.get("data");
+                takenImage = (Bitmap) extras.get("data");
                 //Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 // RESIZE BITMAP, see section below
 
@@ -209,14 +213,14 @@ public class HomeActivity extends AppCompatActivity {
                 //saveBitmap(takenImage, "/");
 
                 //attempt 3
-                ParseFile parseFile = conversionBitmapParseFile(takenImage);
+                parseFile = conversionBitmapParseFile(takenImage);
 
                 //creating new post
-                final ParseUser user = ParseUser.getCurrentUser();
+                user = ParseUser.getCurrentUser();
                 if (isStoragePermissionGranted()) {
                     //ParseFile parseFile = new ParseFile(file);
-                    final String description = descriptionInput.getText().toString();
-                    createPost(description, parseFile, user);
+                    //final String description = descriptionInput.getText().toString();
+                    //createPost(description, parseFile, user);
                     // Load the taken image into a preview
                     ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
                     ivPreview.setImageBitmap(takenImage);
@@ -233,14 +237,14 @@ public class HomeActivity extends AppCompatActivity {
                 try {
                     Uri photoUri = data.getData();
                     // Do something with the photo based on Uri
-                    Bitmap selectedImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
+                    takenImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
                     // Load the selected image into a preview
                     ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
-                    ivPreview.setImageBitmap(selectedImage);
-                    final ParseUser user = ParseUser.getCurrentUser();
-                    final String description = descriptionInput.getText().toString();
-                    ParseFile parseFile = conversionBitmapParseFile(selectedImage);
-                    createPost(description, parseFile, user);
+                    ivPreview.setImageBitmap(takenImage);
+                    user = ParseUser.getCurrentUser();
+                    //final String description = descriptionInput.getText().toString();
+                    parseFile = conversionBitmapParseFile(takenImage);
+                    //createPost(description, parseFile, user);
 
                 } catch (Exception e) {
 
@@ -317,6 +321,14 @@ public class HomeActivity extends AppCompatActivity {
             // Bring up gallery to select a photo
             startActivityForResult(intent, PICK_PHOTO_CODE);
         }
+    }
+
+    public void onPost(View view) {
+
+        final String description = descriptionInput.getText().toString();
+        createPost(description, parseFile, user);
+        Toast.makeText(this, "Posted!", Toast.LENGTH_SHORT).show();
+
     }
 
 
