@@ -27,7 +27,7 @@ The following **optional** features are implemented:
 - User Profiles:
    - [X] Allow the logged in user to add a profile photo
    - [X] Display the profile photo with each post
-   - [ ] Tapping on a post's username or profile photo goes to that user's profile page
+   - [X] Tapping on a post's username or profile photo goes to that user's profile page
 - [ ] User can comment on a post and see all comments for each post in the post details screen.
 - [ ] User can like a post and see number of likes for each post in the post details screen.
 - [X] Create a custom Camera View on your phone.
@@ -37,6 +37,7 @@ The following **optional** features are implemented:
 The following **additional** features are implemented:
 
 - [X] Upload pictures from library
+- [X] Automatically load profile if picture already exists 
 
 
 
@@ -44,7 +45,7 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://g.recordit.co/rBlBNqzVT5.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='http://g.recordit.co/eTwdzT2zJ3.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [RecordIt](http://www.cockos.com/licecap/).
 
